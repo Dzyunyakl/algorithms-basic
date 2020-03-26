@@ -32,7 +32,6 @@ namespace Linear_search
                     isSuccessful = true;
                 }
             }
-
             if (!isSuccessful)
             {
                 Console.WriteLine("Entered element not found. Search unsuccessful");

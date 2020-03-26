@@ -4,82 +4,67 @@ namespace Merge_sort
 {
     class Program
     {
-        //метод для слияния массивов
-        static void Merge(int[] array, int lowIndex, int middleIndex, int highIndex)
+        static void Main(string[] args)
         {
-            var left = lowIndex;
-            var right = middleIndex + 1;
-            var tempArray = new int[highIndex - lowIndex + 1];
-            var index = 0;
-
-            while ((left <= middleIndex) && (right <= highIndex))
+            int[] arr = new int[10]
             {
-                if (array[left] < array[right])
+                1, 5, 4, 11, 20, 8, 2, 98, 90, 16
+            };
+
+            MergeSort(arr, 0, arr.Length - 1);
+            Console.WriteLine("Sorted Values:");
+            for (int i = 0; i < arr.Length; i++)
+                Console.WriteLine(arr[i]);
+
+            Console.ReadLine();
+        }
+
+        public static void Merge(int[] input, int left, int middle, int right)
+        {
+            int[] leftArray = new int[middle - left + 1];
+            int[] rightArray = new int[right - middle];
+
+            Array.Copy(input, left, leftArray, 0, middle - left + 1);
+            Array.Copy(input, middle + 1, rightArray, 0, right - middle);
+
+            int i = 0;
+            int j = 0;
+            for (int k = left; k < right + 1; k++)
+            {
+                if (i == leftArray.Length)
                 {
-                    tempArray[index] = array[left];
-                    left++;
+                    input[k] = rightArray[j];
+                    j++;
+                }
+                else if (j == rightArray.Length)
+                {
+                    input[k] = leftArray[i];
+                    i++;
+                }
+                else if (leftArray[i] <= rightArray[j])
+                {
+                    input[k] = leftArray[i];
+                    i++;
                 }
                 else
                 {
-                    tempArray[index] = array[right];
-                    right++;
+                    input[k] = rightArray[j];
+                    j++;
                 }
-
-                index++;
-            }
-
-            for (var i = left; i <= middleIndex; i++)
-            {
-                tempArray[index] = array[i];
-                index++;
-            }
-
-            for (var i = right; i <= highIndex; i++)
-            {
-                tempArray[index] = array[i];
-                index++;
-            }
-
-            for (var i = 0; i < tempArray.Length; i++)
-            {
-                array[lowIndex + i] = tempArray[i];
             }
         }
 
-        //сортировка слиянием
-        static int[] MergeSort(int[] array, int lowIndex, int highIndex)
+        public static void MergeSort(int[] input, int left, int right)
         {
-            if (lowIndex < highIndex)
+            if (left < right)
             {
-                var middleIndex = (lowIndex + highIndex) / 2;
-                MergeSort(array, lowIndex, middleIndex);
-                MergeSort(array, middleIndex + 1, highIndex);
-                Merge(array, lowIndex, middleIndex, highIndex);
+                int middle = (left + right) / 2;
+
+                MergeSort(input, left, middle);
+                MergeSort(input, middle + 1, right);
+
+                Merge(input, left, middle, right);
             }
-
-            return array;
-        }
-
-        static int[] MergeSort(int[] array)
-        {
-            return MergeSort(array, 0, array.Length - 1);
-        }
-
-
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Сортировка слиянием");
-            Console.Write("Введите элементы массива: ");
-            var s = Console.ReadLine().Split(new[] { " ", ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
-            var array = new int[s.Length];
-            for (int i = 0; i < s.Length; i++)
-            {
-                array[i] = Convert.ToInt32(s[i]);
-            }
-
-            Console.WriteLine("Упорядоченный массив: {0}", string.Join(", ", MergeSort(array)));
-
-            Console.ReadLine();
         }
     }
 }
